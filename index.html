@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-around;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+        }
+        .navbar a:hover {
+            background-color: #555;
+            border-radius: 5px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .card {
+            background-color: #f4f4f4;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            min-width: 300px;
+        }
+        .card h3 {
+            margin-top: 0;
+        }
+
+        /* Responsive media queries */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="#https://jsonplaceholder.typicode.com/posts" onclick="loadPage('posts')">Home (Posts)</a>
+        <a href="#https://jsonplaceholder.typicode.com/posts" onclick="loadPage('albums')">Albums</a>
+        <a href="#https://jsonplaceholder.typicode.com/posts" onclick="loadPage('users')">Users</a>
+    </nav>
+
+    <!-- Content area -->
+    <div class="container">
+        <div id="content" class="content">
+            <!-- API ma'lumotlar shu yerda ko'rsatiladi -->
+        </div>
+    </div>
+
+    <script>
+        async function loadPage(page) {
+            let url = '';
+            if (page === 'posts') {
+                url = 'https://jsonplaceholder.typicode.com/posts';
+            } else if (page === 'albums') {
+                url = 'https://jsonplaceholder.typicode.com/albums';
+            } else if (page === 'users') {
+                url = 'https://jsonplaceholder.typicode.com/users';
+            }
+
+            // API'dan ma'lumotlarni olish
+            const response = await fetch(url);
+            const data = await response.json();
+
+            // Ma'lumotlarni sahifada ko'rsatish
+            renderContent(page, data);
+        }
+
+        function renderContent(page, data) {
+            const contentDiv = document.getElementById('content');
+            contentDiv.innerHTML = '';  // Oldingi kontentni tozalash
+
+            // Sahifa turiga qarab ma'lumotlarni ko'rsatish
+            if (page === 'posts') {
+                data.forEach(post => {
+                    const postDiv = document.createElement('div');
+                    postDiv.className = 'card';
+                    postDiv.innerHTML = `<h3>${post.title}</h3><p>${post.body}</p>`;
+                    contentDiv.appendChild(postDiv);
+                });
+            } else if (page === 'albums') {
+                data.forEach(album => {
+                    const albumDiv = document.createElement('div');
+                    albumDiv.className = 'card';
+                    albumDiv.innerHTML = `<h3>Album: ${album.title}</h3>`;
+                    contentDiv.appendChild(albumDiv);
+                });
+            } else if (page === 'users') {
+                data.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'card';
+                    userDiv.innerHTML = `<h3>${user.name}</h3><p>Email: ${user.email}</p><p>Phone: ${user.phone}</p>`;
+                    contentDiv.appendChild(userDiv);
+                });
+            }
+        }
+
+        // Default sahifani yuklash
+        loadPage('posts');
+    </script>
+
+</body>
+</html>
